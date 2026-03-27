@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hat Phil lieb? 💛</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --yellow: #FFD93D;
+      --pink: #FF6B9D;
+      --coral: #FF8C69;
+      --cream: #FFF8E7;
+      --soft: #FFF0F5;
+      --dark: #3D2C2C;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--cream);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Floating hearts background */
+    .bg-hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .bg-heart {
+      position: absolute;
+      font-size: 1.5rem;
+      opacity: 0.12;
+      animation: floatUp linear infinite;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.15; }
+      90% { opacity: 0.12; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2rem;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    .title {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(2rem, 8vw, 3.2rem);
+      color: var(--pink);
+      line-height: 1.2;
+      text-shadow: 3px 3px 0px rgba(255,107,157,0.2);
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--coral);
+      font-weight: 700;
+      margin-bottom: 2.5rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* The big button */
+    .ask-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--pink), var(--coral));
+      color: white;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 1.3rem;
+      padding: 1.1rem 2.8rem;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(255,107,157,0.45), 0 2px 0 rgba(0,0,0,0.08);
+      transition: transform 0.15s, box-shadow 0.15s;
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 0.02em;
+    }
+    .ask-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.15);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .ask-btn:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 10px 32px rgba(255,107,157,0.5); }
+    .ask-btn:hover::after { opacity: 1; }
+    .ask-btn:active { transform: scale(0.97); }
+
+    /* Answer card */
+    .answer-card {
+      margin-top: 2rem;
+      background: white;
+      border-radius: 28px;
+      padding: 1.8rem 2rem;
+      box-shadow: 0 12px 40px rgba(255,107,157,0.15), 0 2px 8px rgba(0,0,0,0.05);
+      display: none;
+      animation: popIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    .answer-card.visible { display: block; }
+
+    @keyframes popIn {
+      0% { transform: scale(0.6) translateY(20px); opacity: 0; }
+      100% { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    .answer-yes {
+      font-family: 'Pacifico', cursive;
+      font-size: 3rem;
+      color: var(--pink);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+
+    .answer-text {
+      font-size: 1rem;
+      color: #888;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+    }
+
+    .gif-frame {
+      width: 100%;
+      max-width: 320px;
+      border-radius: 18px;
+      overflow: hidden;
+      margin: 0 auto;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    .gif-frame img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Confetti burst */
+    .confetti-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+    }
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      animation: confettiFall linear forwards;
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* Phil emoji deco */
+    .deco {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      display: block;
+      animation: wobble 2s ease-in-out infinite;
+    }
+    @keyframes wobble {
+      0%, 100% { transform: rotate(-5deg); }
+      50% { transform: rotate(5deg); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-hearts" id="bgHearts"></div>
+
+<div class="confetti-container" id="confettiContainer"></div>
+
+<div class="container">
+  <span class="deco">🌟</span>
+  <h1 class="title">Hat Phil lieb?</h1>
+  <p class="subtitle">Die wichtigste Frage der Welt</p>
+
+  <button class="ask-btn" onclick="askPhil()" id="askBtn">
+    💛 Frag nach!
+  </button>
+
+  <div class="answer-card" id="answerCard">
+    <div class="answer-yes" id="answerYes">JA!</div>
+    <p class="answer-text" id="answerText"></p>
+    <div class="gif-frame">
+      <img id="answerGif" src="" alt="Liebe Grüße">
+    </div>
+  </div>
+</div>
+
+<script>
+  // Floating background hearts
+  const bgHearts = document.getElementById('bgHearts');
+  const emojis = ['💛','💖','🌸','✨','🌈','💕','🥰','🌻'];
+  for (let i = 0; i < 18; i++) {
+    const h = document.createElement('div');
+    h.className = 'bg-heart';
+    h.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    h.style.left = Math.random() * 100 + 'vw';
+    h.style.animationDuration = (8 + Math.random() * 12) + 's';
+    h.style.animationDelay = (Math.random() * 15) + 's';
+    h.style.fontSize = (1 + Math.random() * 2) + 'rem';
+    bgHearts.appendChild(h);
+  }
+
+  // Answer pool
+  const answers = [
+    { text: "Natürlich, immer und für immer! 💛", gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" },
+    { text: "Ja, so sehr wie Sonnenschein! ☀️", gif: "https://media.giphy.com/media/3oEdv9e08B3IIOP3jG/giphy.gif" },
+    { text: "Ohne jeden Zweifel! 🌸", gif: "https://media.giphy.com/media/Vbtc9VG51NtzT1Qnv1/giphy.gif" },
+    { text: "Phil liebt wie kein Zweiter! 🥰", gif: "https://media.giphy.com/media/26BRrSvJEDf0i9gus/giphy.gif" },
+    { text: "Mehr als alle Sterne zusammen! ⭐", gif: "https://media.giphy.com/media/l4FGpPki7YaLJHXAA/giphy.gif" },
+    { text: "Jawohl! Phil ist der Liebste! 💖", gif: "https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" },
+    { text: "Phil hat so viel Liebe! 🌈", gif: "https://media.giphy.com/media/hf23fMEiRy0oFBSPPV/giphy.gif" },
+  ];
+
+  let lastIndex = -1;
+
+  function askPhil() {
+    // Pick a random answer (avoid repeat)
+    let idx;
+    do { idx = Math.floor(Math.random() * answers.length); } while (idx === lastIndex && answers.length > 1);
+    lastIndex = idx;
+    const a = answers[idx];
+
+    // Update card
+    document.getElementById('answerText').textContent = a.text;
+    document.getElementById('answerGif').src = a.gif + '?r=' + Math.random();
+
+    // Re-trigger animation
+    const card = document.getElementById('answerCard');
+    card.classList.remove('visible');
+    card.style.display = 'none';
+    void card.offsetWidth;
+    card.classList.add('visible');
+
+    // Confetti!
+    launchConfetti();
+  }
+
+  function launchConfetti() {
+    const container = document.getElementById('confettiContainer');
+    container.innerHTML = '';
+    const colors = ['#FFD93D','#FF6B9D','#FF8C69','#A8EDCA','#89CFF0','#FFC0CB'];
+    for (let i = 0; i < 60; i++) {
+      const p = document.createElement('div');
+      p.className = 'confetti-piece';
+      p.style.left = (10 + Math.random() * 80) + 'vw';
+      p.style.top = '-10px';
+      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      p.style.width = (6 + Math.random() * 10) + 'px';
+      p.style.height = (6 + Math.random() * 10) + 'px';
+      p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      p.style.animationDuration = (1.5 + Math.random() * 2.5) + 's';
+      p.style.animationDelay = (Math.random() * 0.6) + 's';
+      container.appendChild(p);
+    }
+    setTimeout(() => container.innerHTML = '', 4000);
+  }
+</script>
+</body>
+</html>
